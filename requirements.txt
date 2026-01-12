@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+sentence_transformers
+pandas
+tiktoken
+chromadb
+pyarrow
+lexrank
