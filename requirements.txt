@@ -1,6 +1,9 @@
 fastapi
 uvicorn
 sentence_transformers
+transformers
+torch
+accelerate
 pandas
 tiktoken
 chromadb
