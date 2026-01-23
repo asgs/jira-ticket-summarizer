@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jira Ticket Content Summarizer</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
+
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        const API_BASE = "http://localhost:8000";
+
+        function App() {
+            const [activeTab, setActiveTab] = useState('summarize');
+
+            return (
+                <div>
+                    <header className="header">
+                        <h1 className="title">Jira Ticket Content Summarizer</h1>
+                        <p className="subtitle">AI-powered ticket summarization & ingestion</p>
+                    </header>
+
+                    <div className="card">
+                        <div className="tabs">
+                            <button
+                                className={`tab ${activeTab === 'summarize' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('summarize')}
+                            >
+                                Summarize
+                            </button>
+                            <button
+                                className={`tab ${activeTab === 'ingest' ? 'active' : ''}`}
+                                onClick={() => setActiveTab('ingest')}
+                            >
+                                Ingest Data
+                            </button>
+                        </div>
+
+                        {activeTab === 'summarize' ? <SummarizeForm /> : <IngestForm />}
+                    </div>
+                </div>
+            );
+        }
+
+        function SummarizeForm() {
+            const [formData, setFormData] = useState({
+                user_input: '',
+                token_count: 500,
+                top_p: 0.5,
+                temperature: 0.7
+            });
+            const [loading, setLoading] = useState(false);
+            const [response, setResponse] = useState(null);
+            const [error, setError] = useState(null);
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                setLoading(true);
+                setError(null);
+                setResponse(null);
+
+                try {
+                    const response = await fetch(`${API_BASE}/summarize`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData)
+                    });
+
+                    if (!response.ok) throw new Error('Summarization failed');
+
+                    const data = await response.json();
+                    console.log("Response from Server is ", data);
+                    setResponse(data);
+                } catch (err) {
+                    setError(err.message);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            return (
+                <form onSubmit={handleSubmit}>
+                    <div className="form-group">
+                        <label className="label">Ticket Content / Query</label>
+                        <textarea
+                            className="textarea"
+                            placeholder="Paste Jira ticket content or your query here..."
+                            value={formData.user_input}
+                            onChange={e => setFormData({ ...formData, user_input: e.target.value })}
+                            required
+                        />
+                    </div>
+                    <details>
+                        <summary>Advanced Options</summary>
+                        <div className="form-group">
+                            <label className="label">Max Tokens: <span className="range-value">{formData.token_count}</span></label>
+                            <input
+                                type="range" min="200" max="2000" step="10"
+                                className="input"
+                                value={formData.token_count}
+                                onChange={e => setFormData({ ...formData, token_count: Number(e.target.value) })}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label className="label">Creativity (Temp): <span className="range-value">{formData.temperature}</span></label>
+                            <input
+                                type="range" min="0" max="1" step="0.1"
+                                className="input"
+                                value={formData.temperature}
+                                onChange={e => setFormData({ ...formData, temperature: Number(e.target.value) })}
+                            />
+                        </div>
+
+                        <div className="form-group">
+                            <label className="label">Top P: <span className="range-value">{formData.top_p}</span></label>
+                            <input
+                                type="range" min="0" max="1" step="0.1"
+                                className="input"
+                                value={formData.top_p}
+                                onChange={e => setFormData({ ...formData, top_p: Number(e.target.value) })}
+                            />
+                        </div>
+                    </details>
+
+                    <button type="submit" className="btn" disabled={loading}>
+                        {loading ? 'Summarizing. Please wait...' : 'Summarize'}
+                    </button>
+
+                    {error && <div className="error-msg">{error}</div>}
+
+                    {response && (
+                        <div className="response">
+                            <h3>Response:</h3>
+                            <pre style={{ whiteSpace: 'pre-wrap' }}>{response.result.summary}</pre>
+                        </div>
+                    )}
+                </form>
+            );
+        }
+
+        function IngestForm() {
+            const [input, setInput] = useState('');
+            const [loading, setLoading] = useState(false);
+            const [status, setStatus] = useState(null);
+
+            const handleIngest = async (e) => {
+                e.preventDefault();
+                setLoading(true);
+                setStatus(null);
+
+                try {
+                    const response = await fetch(`${API_BASE}/ingest`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ user_input: input })
+                    });
+
+                    const data = await response.json();
+                    setStatus({ type: 'success', msg: `Success! ID: ${data.id}` });
+                    setInput('');
+                } catch (err) {
+                    setStatus({ type: 'error', msg: 'Ingestion failed' });
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            return (
+                <form onSubmit={handleIngest}>
+                    <div className="form-group">
+                        <label className="label">Content to Ingest</label>
+                        <textarea
+                            className="textarea"
+                            placeholder="Paste text content to add to the knowledge base..."
+                            value={input}
+                            onChange={e => setInput(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    <button type="submit" className="btn" disabled={loading}>
+                        {loading ? 'Ingesting...' : 'Ingest Content'}
+                    </button>
+
+                    {status && (
+                        <div className={status.type === 'success' ? 'success-msg' : 'error-msg'}>
+                            {status.msg}
+                        </div>
+                    )}
+                </form>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+
+</html>

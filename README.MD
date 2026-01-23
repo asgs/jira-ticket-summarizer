@@ -4,12 +4,13 @@ This is an attempt to build an AI ~Agent~ **Chatbot** that will read Jira ticket
 # Tech Stack
 - Python3
 - FastAPI (with uvicorn)
-- sentence-transformers (with MiniLM)
+- sentence-transformers (with MiniLM for embedding and Qwen2.5 LM for Instruct purposes)
 - pandas
 - pyarrow
 - ChromaDB
-- LexRank
 - tiktoken
+- ReactJS for frontend
+- Babel for JSX
 
 # Data Setup
 This agent needs external data sources to build the knowledge base required to augment the responses from the LM. Currently, two publicly accessible data sources were tried from Kaggle
@@ -37,15 +38,15 @@ Run `curl -v -XPOST "http://localhost:8000/ingest?input=We%20have%20a%20transpor
 
 ## Summarize a query
 
-Run `curl -v -XPOST "http://localhost:8000/summarize?input=This%20story%20is%20to%20track%20the%20development%20efforts%20required%20to%20implement%20the%20transport%20optimization%20requirement.%20Break%20down%20the%20tasks%20involved%20with%20a%20high%20level%20estimate%20to%20build%20and%20test%20each%20and%20every%20criteria%20to%20achieve%20the%20optimization"|jq`
+Run `curl -v -XPOST "http://localhost:8000/summarize?input=This%20story%20is%20to%20track%20the%20development%20efforts%20required%20to%20implement%20the%20transport%20optimization%20requirement.%20Break%20down%20the%20tasks%20involved%20with%20a%20high%2Dlevel%20estimate%20to%20build%20and%20test%20each%20and%20every%20criterion%20to%20achieve%20the%20optimization"|jq`
 
 # TODOs
 1. Provide options to switch to a cloud-model accepting necessary configs like URL, Auth Token/API Key, etc
-2. Build a basic GUI for user to submit their queries and view the responses returned
-3. Provide an option to user to retrieve top-k results. The default is 3 now
+2. [Done] - ~~Build a basic GUI for user to submit their queries and view the responses returned~~
+3. [Done] - ~~Provide an option to user to retrieve top-k results. The default is 3 now~~
 4. [**WIP**] - Provide an endpoint to ingest one or more documents or reingest one or more datasources on demand
 5. Provide an endpoint to save/load pre-trained models on demand
-6. Move the local LM name, dataset location, CSV column names to a configuration file
+6. [Done] - ~~Move the local LM name, dataset location, CSV column names to a configuration file~~
 7. Model Quantization
 8. Model Fine/Prompt-tuning
 9. Configure ChromaDB to use hnsw indexing

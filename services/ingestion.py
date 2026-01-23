@@ -71,7 +71,7 @@ class IngestionService:
         self._wait_for_indexing(start_time)
         del df
 
-    def ingest_single(self, user_input: str) -> str:
+    async def ingest_single(self, user_input: str) -> str:
         index = gen_hash(user_input)
         self.index_doc_into_collxn(data=user_input, index=index)
         self.index_chunked_doc_into_collxn(row_data=user_input, index=index)

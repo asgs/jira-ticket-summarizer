@@ -5,17 +5,23 @@ from config import settings
 from utils import build_model_prompt
 from core.model_manager import model_manager
 from core.vector_db import vector_db
+from models import SummarizeRequest
 
 logger = logging.getLogger(__name__)
 
 class SummarizerService:
-    async def summarize(self, user_input: str, token_count: int = 500, top_p: float = 0.5, temperature: float = 0.7):
+    async def summarize(self, request: SummarizeRequest):
+        user_input = request.user_input
+        token_count = request.token_count
+        top_p = request.top_p
+        temperature = request.temperature
+        top_k = request.top_k
         logger.info(f"user_input is '{user_input}'")
         st = time.perf_counter()
 
         query_embedding = model_manager.transformer.encode(user_input)
 
-        chunked_search_results = vector_db.query_chunks(query_embeddings=[query_embedding], n_results=5)
+        chunked_search_results = vector_db.query_chunks(query_embeddings=[query_embedding], n_results=top_k)
         ids = chunked_search_results['ids'][0]
         logger.debug(f"ids from chunked_docs search are {ids}")
 
