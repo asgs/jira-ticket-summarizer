@@ -19,9 +19,8 @@ class IngestionService:
         # logger.info(f"Model Manager is {model_manager}")
         if id is None:
             id = gen_hash(data)
-            ids = [id]
-        else:
-            ids = [id]
+
+        ids = [id]
         logger.info(f"Indexing data#{index} with hash {id[0:5]}")
         vector_db.add_full_docs(ids=ids, documents=[data])
 
@@ -43,10 +42,12 @@ class IngestionService:
         data_parts = []
         for col in cols:
             data_part = row[col]
-            if data_part is None or data_part == "" or data_part == "nan" or data_part == "NaN" or data_part is np.nan:
+            if (data_part is None or data_part == "" or data_part == "nan" or
+                data_part == "NaN" or data_part is np.nan):
+                logger.warn(f"Skipping unknown/invalid value '{data_part}' for the column '{col}'")
                 continue
             data_parts.append(data_part)
-        logger.info(f"Data parts: {data_parts}")
+        logger.debug(f"Data parts: {data_parts}")
         return ". ".join(data_parts)
 
     def ingest_from_csv(self) -> None:
