@@ -18,7 +18,7 @@ This agent needs external data sources to build the knowledge base required to a
 - [Apache JIRA Issues](https://www.kaggle.com/datasets/tedlozzo/apaches-jira-issues?select=issues.csv)
 - [Jira Dataset](https://www.kaggle.com/datasets/cesaranasco/jira-dataset)
 
-whichever dataset is used, the expectation here is it's a CSV file with column names configured in the [config.py](config.py) file
+whichever dataset is used, the expectation here is that it's a CSV file with column names configured in the [config.py](config.py#L20) file
 
 # How to Run?
 1. Install python3
@@ -28,7 +28,7 @@ whichever dataset is used, the expectation here is it's a CSV file with column n
 5. Download the data sources mentioned in the previous section and unzip to the source-data directory
 6. Run `uvicorn main:app` to ingest sample data and spin up the FastAPI server
 
-Once the ingestion completes, the app is ready to accept your inputs via the endpoint http://localhost:8000/summarize?input=xyz
+Once the ingestion completes, the app is ready with a [GUI](http://localhost:8000/ui/index.html) providing ![ingestion and summarization features](ui-home-sample.png "UI Home Page")
 
 # Sample Test
 
