@@ -55,7 +55,8 @@ class ModelManager:
             logger.info(f"Loading Causal Model: {settings.CAUSAL_LM_NAME}")
             self._causal_model = AutoModelForCausalLM.from_pretrained(
                 settings.CAUSAL_LM_NAME,
-                device_map="auto"
+                device_map="auto",
+                revision=settings.CAUSAL_LM_REVISION
             )
         return self._causal_model
 

@@ -8,6 +8,7 @@ class Settings:
 
         # Model Config
         self.CAUSAL_LM_NAME = os.getenv("CAUSAL_LM_NAME", "Qwen/Qwen2.5-0.5B-Instruct")
+        self.CAUSAL_LM_REVISION = os.getenv("CAUSAL_LM_REVISION", "7ae557604adf67be50417f59c2c2f167def9a775")
         self.EMBEDDING_LM_NAME = os.getenv("EMBEDDING_LM_NAME", "sentence-transformers/all-MiniLM-L6-v2")
         self.EMBEDDING_LM_SEQ_LEN = int(os.getenv("EMBEDDING_LM_SEQ_LEN", 256))
         self.RERANKER_MODEL_NAME = os.getenv("RERANKER_MODEL_NAME", "cross-encoder/ms-marco-MiniLM-L-6-v2")
