@@ -81,10 +81,11 @@
                         body: JSON.stringify(formData)
                     });
 
-                    if (!response.ok) throw new Error('Summarization failed');
+                    if (!response.ok)
+                        throw new Error('Summarization failed; Why? ' + (await response.text() + "; Status Code - " + response.status));
 
                     const data = await response.json();
-                    console.log("Response from Server is ", data);
+                    console.debug("Response from Server is ", data);
                     setResponse(data);
                 } catch (err) {
                     setError(err.message);
@@ -147,6 +148,7 @@
                     {response && (
                         <div className="response">
                             <h3>Response:</h3>
+                            <h5>(Generated in {response.metadata.time_taken_seconds} seconds)</h5>
                             <pre style={{ whiteSpace: 'pre-wrap' }}>{response.result.summary}</pre>
                         </div>
                     )}

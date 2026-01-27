@@ -2,7 +2,7 @@ import os
 
 class Settings:
     def __init__(self):
-        self.MAX_RECORD_COUNT = int(os.getenv("MAX_RECORD_COUNT", 1000))
+        self.MAX_RECORD_COUNT = int(os.getenv("MAX_RECORD_COUNT", 100))
         self.MAX_THREAD_COUNT = int(os.getenv("MAX_THREAD_COUNT", 1))
         self.SRC_DATA_LOC = os.getenv("SRC_DATA_LOC", "source-data/issues.csv")
 

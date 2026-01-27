@@ -61,7 +61,7 @@ class SummarizerService:
         out_text = model_manager.tokenizer.decode(out_tokens[0], skip_special_tokens=True)
         logger.info(f"LLM reranked Summary is {out_text}")
 
-        summary_start = out_text.find(settings.SUMMARY_PREFIX)
+        summary_start = out_text.rfind(settings.SUMMARY_PREFIX)
         if summary_start != -1:
             summary = out_text[summary_start + len(settings.SUMMARY_PREFIX):].strip()
         else:
