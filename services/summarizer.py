@@ -5,7 +5,7 @@ from config import settings
 from utils import build_model_prompt
 from core.model_manager import model_manager
 from core.vector_db import vector_db
-from models import SummarizeRequest
+from request_models import SummarizeRequest
 
 logger = logging.getLogger(__name__)
 
