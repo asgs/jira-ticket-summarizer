@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jira Ticket Content Summarizer</title>
+    <title>Smart Backlog Assistant</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,6 +15,7 @@
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <!-- Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 
 <body>
@@ -31,8 +32,8 @@
             return (
                 <div>
                     <header className="header">
-                        <h1 className="title">Jira Ticket Content Summarizer</h1>
-                        <p className="subtitle">AI-powered ticket summarization & ingestion</p>
+                        <h1 className="title">Smart Backlog Assistant</h1>
+                        <p className="subtitle">(An AI-powered Backlog Manager)</p>
                     </header>
 
                     <div className="card">
@@ -149,7 +150,7 @@
                         <div className="response">
                             <h3>Response:</h3>
                             <h5>(Generated in {response.metadata.time_taken_seconds} seconds)</h5>
-                            <pre style={{ whiteSpace: 'pre-wrap' }}>{response.result.summary}</pre>
+                            <div dangerouslySetInnerHTML={{ __html: marked.parse(response.result.summary) }}></div>
                         </div>
                     )}
                 </form>

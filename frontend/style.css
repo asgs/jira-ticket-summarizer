@@ -63,6 +63,16 @@ body {
     backdrop-filter: blur(10px);
 }
 
+pre {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+code {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
 .tabs {
     display: flex;
     gap: 1rem;
